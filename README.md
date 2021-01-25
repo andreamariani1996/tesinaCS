@@ -11,11 +11,9 @@ Per poter eseguire il codice che replica gli attacchi è necessario installare:
 ## Organizzazione del repository 
 
 Questo repository è organizzato in diverse sezioni (cartelle):
-
-* Attacco1
-
-* Attacco2
-
+* [Attacco-SimpleDAO(v1)](Attacco-SimpleDAO(v1)/)
+* [Attacco-SimpleDAO(v2)](Attacco-SimpleDAO(v2)/)
+* [Attacco-DynamicLibraries](Attacco-DynamicLibraries/)
 
 ## Accesso al repository 
 
