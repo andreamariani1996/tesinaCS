@@ -1,6 +1,6 @@
 # Attacchi agli smart contracts di Ethereum 
 
-Questo repository contiene la replica, svolta da Andrea Mariani, di alcuni attacchi agli smart contracts di Etherum per la tesina relativa al corso di [Cybersecurity](http://www.dia.uniroma3.it/~pizzonia/ssir/), tenuto dal prof. [Maurizio Pizzonia](https://compunet.ing.uniroma3.it/#!/people/pizzo), nell'anno accademico 2020-2021.
+Questo repository contiene la replica, svolta da Andrea Mariani, di alcuni attacchi agli smart contracts di Ethereum per la tesina relativa al corso di [Cybersecurity](http://www.dia.uniroma3.it/~pizzonia/ssir/), tenuto dal prof. [Maurizio Pizzonia](https://compunet.ing.uniroma3.it/#!/people/pizzo), nell'anno accademico 2020-2021.
 
 ## Software da installare su proprio PC
 
