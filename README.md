@@ -21,11 +21,11 @@ Questo repository è organizzato in diverse sezioni (cartelle):
 
 Per effettuare il download del repository:
 
-    git clone https://github.com/andreamariani1996/progettoASW2020.git
+    git clone https://github.com/andreamariani1996/tesinaCS.git
 
 Oppure se il sistema host è Windows:
 
-    git clone --config core.autocrlf=input https://github.com/andreamariani1996/progettoASW2020.git 
+    git clone --config core.autocrlf=input https://github.com/andreamariani1996/tesinaCS.git 
 
 Per aggiornare il contenuto della propria copia locale del repository: 
 
