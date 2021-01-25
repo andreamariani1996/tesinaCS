@@ -188,7 +188,6 @@ deploy_txn = web3.eth.sendTransaction(contract_data)
 txn_receipt = web3.eth.waitForTransactionReceipt(deploy_txn)
 # Salvo in un oggetto il contratto deployato
 contract_simpleDAO = web3.eth.contract(address=txn_receipt.contractAddress, abi=simpleDAOInterfaceJS)
-
 # Address, balance e functions di SimpleDAO
 print("L'account[0] ha pubblicato il contratto SimpleDAO: " + str((contract_simpleDAO.address)) 
 + "\nil cui bilancio iniziale è: " + str(web3.eth.getBalance(contract_simpleDAO.address)) + "\ned offre le seguenti funzioni:" + "\n"
@@ -226,6 +225,8 @@ contract_mallory2.functions.attack().transact({'from': accounts[5]})
 print(".........Cindy ha inviato l'attacco underflow:.........\n")
 
 print("Bilancio del contratto simpleDAO dopo l'attacco di Cindy: " + str(web3.eth.getBalance(contract_simpleDAO.address)) + "\n")
+
+print("Bilancio del contratto Mallory in simpleDAO dopo l'attacco di Cindy: " + str(contract_simpleDAO.functions.queryCredit(contract_mallory2.address).call()) + "\n")
 
 print("Bilancio del contratto Mallory2 dopo l'attacco di Cindy: " + str(web3.eth.getBalance(contract_mallory2.address)) + "\n")
 
