@@ -209,6 +209,3 @@ contract_mallory.fallback.transact()
 print("Bilancio del contratto simpleDAO dopo l'attacco di Cindy: " + str(web3.eth.getBalance(contract_simpleDAO.address)) + "\n")
 
 print("Bilancio del contratto Mallory dopo l'attacco di Cindy: " + str(web3.eth.getBalance(contract_mallory.address)) + "\n")
-
-
-
